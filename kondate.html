@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="給食メモ">
+<title>給食メモ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FEFCF7;
+    --bg2: #F7F3EC;
+    --bg3: #EDE8DF;
+    --text: #2C2416;
+    --text2: #7A6E5F;
+    --text3: #B0A694;
+    --amber: #C17A2A;
+    --amber-bg: #FDF0DA;
+    --amber-text: #7A4A0E;
+    --purple: #7B5EA7;
+    --purple-bg: #F0EAF9;
+    --purple-text: #4A2D7A;
+    --blue: #3A78C9;
+    --blue-bg: #E8F1FC;
+    --blue-text: #1A4A8C;
+    --green: #4A9B6A;
+    --green-bg: #E8F7EE;
+    --green-text: #1E6040;
+    --gray-bg: #EDEBE7;
+    --gray-text: #5C5448;
+    --border: rgba(44,36,22,0.1);
+    --border2: rgba(44,36,22,0.18);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 12px rgba(44,36,22,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+  .header {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 52px 20px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-title { font-size: 17px; font-weight: 700; color: var(--text); }
+  .header-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+  .tabs-bar {
+    display: flex;
+    background: var(--bg2);
+    border-radius: 12px;
+    padding: 3px;
+    margin: 12px 16px 0;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 7px 0;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 12px;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .tab-btn.active {
+    background: var(--bg);
+    color: var(--text);
+    box-shadow: var(--shadow);
+    font-weight: 700;
+  }
+
+  .content { padding: 16px; }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* Today card */
+  .today-hero {
+    background: linear-gradient(135deg, #FDF6E8 0%, #F7EDD4 100%);
+    border: 1px solid rgba(193,122,42,0.2);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .today-eyebrow { font-size: 11px; color: var(--amber); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 4px; }
+  .today-date-txt { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 700;
+    padding: 5px 11px; border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  .badge-rice { background: var(--amber-bg); color: var(--amber-text); }
+  .badge-noodle { background: var(--purple-bg); color: var(--purple-text); }
+  .badge-bread { background: var(--blue-bg); color: var(--blue-text); }
+  .badge-holiday { background: var(--gray-bg); color: var(--gray-text); }
+  .menu-name { font-size: 14px; color: var(--text); line-height: 1.6; margin-top: 4px; }
+  .menu-note { font-size: 12px; color: var(--text2); margin-top: 6px; line-height: 1.5; }
+
+  /* Upcoming */
+  .section-label { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; margin: 18px 0 10px; }
+  .upcoming-row {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    box-shadow: var(--shadow);
+  }
+  .upcoming-date { font-size: 13px; font-weight: 700; min-width: 68px; color: var(--text); flex-shrink: 0; }
+  .upcoming-info { flex: 1; }
+  .upcoming-menu { font-size: 12px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
+
+  /* Calendar */
+  .cal-month { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+  .cal-head { font-size: 10px; text-align: center; padding: 4px 0; color: var(--text3); font-weight: 700; }
+  .cal-cell {
+    border-radius: 8px; padding: 4px 2px;
+    min-height: 54px; display: flex; flex-direction: column; align-items: center;
+    cursor: pointer; transition: background 0.1s;
+    border: 1px solid transparent;
+  }
+  .cal-cell:active { background: var(--bg3); }
+  .cal-cell.today { border: 2px solid var(--amber); }
+  .cal-cell.selected { background: var(--bg2); border-color: var(--border2); }
+  .cal-cell.empty { pointer-events: none; }
+  .cal-num { font-size: 12px; font-weight: 700; line-height: 1.4; }
+  .cal-dot { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px; margin-top: 2px; }
+  .cal-dot-rice { background: var(--amber-bg); color: var(--amber-text); }
+  .cal-dot-noodle { background: var(--purple-bg); color: var(--purple-text); }
+  .cal-dot-bread { background: var(--blue-bg); color: var(--blue-text); }
+  .cal-dot-holiday { background: var(--gray-bg); color: var(--gray-text); }
+
+  .cal-detail {
+    background: var(--bg2);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin-top: 12px;
+    border: 1px solid var(--border);
+  }
+  .cal-detail-date { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text2); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+  /* Rice list */
+  .rice-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    box-shadow: var(--shadow);
+  }
+  .rice-row.past { opacity: 0.38; }
+  .rice-date { font-size: 13px; font-weight: 700; min-width: 72px; flex-shrink: 0; color: var(--text); }
+  .rice-info { flex: 1; }
+  .rice-menu { font-size: 12px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
+
+  /* Note box */
+  .note-box {
+    background: var(--bg2);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.8;
+    margin-top: 16px;
+  }
+  .note-box strong { color: var(--text); display: block; margin-bottom: 4px; font-size: 12px; }
+
+  /* Bottom nav */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(254,252,247,0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+    z-index: 200;
+  }
+  .nav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    border: none; background: transparent; cursor: pointer;
+    padding: 4px 0; font-family: 'Zen Maru Gothic', sans-serif;
+    color: var(--text3); transition: color 0.2s;
+  }
+  .nav-btn.active { color: var(--amber); }
+  .nav-icon { font-size: 22px; }
+  .nav-label { font-size: 10px; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">🍱 給食メモ</div>
+  <div class="header-sub" id="header-month"></div>
+  <div class="tabs-bar">
+    <button class="tab-btn active" onclick="switchTab('today',0)">今日</button>
+    <button class="tab-btn" onclick="switchTab('calendar',1)">カレンダー</button>
+    <button class="tab-btn" onclick="switchTab('ricelist',2)">白米リスト</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="tab-pane active" id="tab-today"></div>
+  <div class="tab-pane" id="tab-calendar"></div>
+  <div class="tab-pane" id="tab-ricelist"></div>
+</div>
+
+<script>
+const WEEKDAYS = ['日','月','火','水','木','金','土'];
+const now = new Date();
+const TODAY_D = now.getDate();
+const TODAY_M = now.getMonth(); // 0-indexed
+const TODAY_Y = now.getFullYear();
+
+// ── 5月データ ──────────────────────────────────────
+// type: 'rice'=白米持参 / 'noodle'=麺の日(ご飯かおにぎり) / 'bread'=パンの日(不要) / 'holiday'=休日
+const MONTHS_DATA = {
+  "2026-5": {
+    1:  {menu:'油淋鶏・春雨サラダ・中華スープ', type:'rice', note:'白ご飯を持たせてください'},
+    2:  {menu:'焼きそば・おからサラダ・わかめの味噌汁', type:'noodle', note:'麺の日。ご飯かおにぎりを持参'},
+    3:  {menu:'憲法記念日', type:'holiday', note:''},
+    4:  {menu:'みどりの日', type:'holiday', note:''},
+    5:  {menu:'こどもの日', type:'holiday', note:''},
+    6:  {menu:'振替休日', type:'holiday', note:''},
+    7:  {menu:'魚のごまだれ焼き・マカロニサラダ・豆腐の味噌汁', type:'rice', note:'白ご飯を持たせてください'},
+    8:  {menu:'ミートボールカレー・わかめスープ・フルーチェ', type:'rice', note:'●丼の日。白ご飯を持たせてください'},
+    9:  {menu:'きつねうどん・ごぼうサラダ・りんご', type:'noodle', note:'麺の日。ご飯かおにぎりを持参'},
+    10: {menu:'土曜日', type:'holiday', note:''},
+    11: {menu:'そぼろ丼・きゅうりとわかめの酢の物・もやしの味噌汁', type:'rice', note:'●丼の日。白ご飯を持たせてください'},
+    12: {menu:'甘辛チキン・フラワーサラダ・野菜スープ・レモンケーキ', type:'rice', note:'白ご飯を持たせてください'},
+    13: {menu:'魚のピザ風焼き・春雨ソテー・えのきのすまし汁', type:'rice', note:'白ご飯を持たせてください'},
+    14: {menu:'ひき肉入り卵焼き・もやしのごま酢和え・じゃがいもの味噌汁', type:'rice', note:'白ご飯を持たせてください'},
+    15: {menu:'ミートスパゲティ・野菜スープ・まるパン', type:'bread', note:'🥐パンの日。白ご飯は不要です'},
+    16: {menu:'ファミリーデー・午前保育・愛情弁当の日', type:'holiday', note:'午前保育のため愛情弁当持参'},
+    17: {menu:'土曜日', type:'holiday', note:''},
+    18: {menu:'きのこ豚丼・さつまいもサラダ・豆腐のすまし汁', type:'rice', note:'●丼の日。白ご飯を持たせてください'},
+    19: {menu:'チキン南蛮・ポテトサラダ・コーンポタージュ', type:'rice', note:'白ご飯を持たせてください'},
+    20: {menu:'白身魚フライ・切り干し大根の煮物・たけのこの味噌汁', type:'rice', note:'白ご飯を持たせてください'},
+    21: {menu:'マーボー豆腐・ブロッコリーのおかか和え・中華スープ', type:'rice', note:'白ご飯を持たせてください'},
+    22: {menu:'から揚げ・小松菜の煮浸し・大根の味噌汁', type:'rice', note:'白ご飯を持たせてください'},
+    23: {menu:'ビビンバ丼・ちくわの和え物・卵スープ', type:'rice', note:'●丼の日。白ご飯を持たせてください'},
+    24: {menu:'土曜日', type:'holiday', note:''},
+    25: {menu:'野菜ラーメン・かにかまサラダ・オレンジ', type:'noodle', note:'麺の日。ご飯かおにぎりを持参'},
+    26: {menu:'ぶりのねぎ塩焼き・スパゲティサラダ・豚汁', type:'rice', note:'白ご飯を持たせてください'},
+    27: {menu:'豆腐ハンバーグ・ほうれん草のソテー・キャベツの味噌汁', type:'rice', note:'白ご飯を持たせてください'},
+    28: {menu:'鮭のコーンマヨ焼き・ひじきサラダ・ミネストローネ', type:'rice', note:'白ご飯を持たせてください'},
+    29: {menu:'和風きのこスパゲティ・野菜スープ・まるパン', type:'bread', note:'🥐パンの日。白ご飯は不要です'},
+    30: {menu:'回鍋肉・ほうれん草の和え物・中華スープ', type:'rice', note:'白ご飯を持たせてください'},
+    31: {menu:'土曜日', type:'holiday', note:''},
+  }
+};
+
+function getKey(y,m) { return y+'-'+m; }
+function getData() {
+  const key = getKey(TODAY_Y, TODAY_M+1);
+  return MONTHS_DATA[key] || {};
+}
+
+function getBadge(type) {
+  const map = {
+    rice: ['badge-rice','🍚 白ご飯を持参'],
+    noodle: ['badge-noodle','🍜 麺の日・ご飯持参'],
+    bread: ['badge-bread','🥐 パンの日・不要'],
+    holiday: ['badge-holiday','休日・行事']
+  };
+  const [cls, txt] = map[type]||map.holiday;
+  return `<span class="badge ${cls}">${txt}</span>`;
+}
+function getDot(type) {
+  return `<span class="cal-dot cal-dot-${type}">${{rice:'白米',noodle:'麺',bread:'パン',holiday:'休'}[type]||'休'}</span>`;
+}
+
+// ── 今日タブ ──────────────────────────────────────
+function renderToday() {
+  const data = getData();
+  const info = data[TODAY_D];
+  const dow = WEEKDAYS[now.getDay()];
+  let html = `<div class="today-hero">
+    <div class="today-eyebrow">Today</div>
+    <div class="today-date-txt">${TODAY_M+1}月${TODAY_D}日（${dow}）</div>
+    ${getBadge(info ? info.type : 'holiday')}
+    <div class="menu-name">${info ? info.menu : '給食なし・休日'}</div>
+    ${info && info.note ? `<div class="menu-note">${info.note}</div>` : ''}
+  </div>`;
+
+  const upcoming = [];
+  for (let d=TODAY_D+1; d<=31; d++) {
+    const m = data[d];
+    if (m && m.type !== 'holiday') { upcoming.push({d,...m}); }
+    if (upcoming.length >= 4) break;
+  }
+  if (upcoming.length) {
+    html += '<div class="section-label">今後の給食</div>';
+    upcoming.forEach(u => {
+      const dw = WEEKDAYS[new Date(TODAY_Y, TODAY_M, u.d).getDay()];
+      html += `<div class="upcoming-row">
+        <div class="upcoming-date">${TODAY_M+1}/${u.d}（${dw}）</div>
+        <div class="upcoming-info">${getBadge(u.type)}<div class="upcoming-menu">${u.menu}</div></div>
+      </div>`;
+    });
+  }
+  document.getElementById('tab-today').innerHTML = html;
+}
+
+// ── カレンダータブ ───────────────────────────────
+let selectedDay = null;
+function renderCalendar() {
+  const data = getData();
+  const firstDow = new Date(TODAY_Y, TODAY_M, 1).getDay();
+  const daysInMonth = new Date(TODAY_Y, TODAY_M+1, 0).getDate();
+
+  let grid = '';
+  WEEKDAYS.forEach((w,i) => {
+    const c = i===0?'color:#C17A2A':i===6?'color:#3A78C9':'';
+    grid += `<div class="cal-head" style="${c}">${w}</div>`;
+  });
+  for (let i=0;i<firstDow;i++) grid+='<div class="cal-cell empty"></div>';
+  for (let d=1;d<=daysInMonth;d++) {
+    const info = data[d];
+    const isToday = d===TODAY_D;
+    const isSel = d===selectedDay;
+    const dow = new Date(TODAY_Y,TODAY_M,d).getDay();
+    const numColor = dow===0?'color:#C17A2A':dow===6?'color:#3A78C9':'';
+    let cls='cal-cell';
+    if(isToday) cls+=' today';
+    if(isSel) cls+=' selected';
+    const dot = info ? getDot(info.type) : '';
+    grid+=`<div class="${cls}" onclick="selectDay(${d})">
+      <span class="cal-num" style="${numColor}">${d}</span>${dot}
+    </div>`;
+  }
+
+  let detailHtml = '';
+  if (selectedDay && data[selectedDay]) {
+    const s = data[selectedDay];
+    const dw = WEEKDAYS[new Date(TODAY_Y,TODAY_M,selectedDay).getDay()];
+    detailHtml = `<div class="cal-detail">
+      <div class="cal-detail-date">${TODAY_M+1}月${selectedDay}日（${dw}）</div>
+      ${getBadge(s.type)}
+      <div style="font-size:13px;color:var(--text2);margin-top:8px;line-height:1.6;">${s.menu}</div>
+      ${s.note?`<div style="font-size:12px;color:var(--text3);margin-top:6px;">${s.note}</div>`:''}
+    </div>`;
+  }
+
+  document.getElementById('tab-calendar').innerHTML = `
+    <div class="cal-month">${TODAY_Y}年${TODAY_M+1}月</div>
+    <div class="cal-grid">${grid}</div>
+    ${detailHtml}
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--amber-bg);border:1px solid var(--amber-text);"></div>白米持参</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--purple-bg);border:1px solid var(--purple-text);"></div>麺の日</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--blue-bg);border:1px solid var(--blue-text);"></div>パンの日</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--gray-bg);border:1px solid var(--gray-text);"></div>休日</div>
+    </div>
+    <div class="note-box">
+      <strong>持参ルール（純心幼稚園 令和8年度）</strong>
+      🍚 白ご飯は毎日持たせてください（パンの日除く）<br>
+      🍜 麺の日はご飯かおにぎりを持参<br>
+      🥐 パンの日（15・29日）は不要<br>
+      ●丼の日も白ご飯を持参
+    </div>`;
+}
+
+function selectDay(d) {
+  selectedDay = selectedDay===d ? null : d;
+  renderCalendar();
+}
+
+// ── 白米リストタブ ──────────────────────────────
+function renderRiceList() {
+  const data = getData();
+  const daysInMonth = new Date(TODAY_Y, TODAY_M+1, 0).getDate();
+  let html = '';
+  for (let d=1;d<=daysInMonth;d++) {
+    const info = data[d];
+    if (!info || info.type==='holiday' || info.type==='bread') continue;
+    const dow = WEEKDAYS[new Date(TODAY_Y,TODAY_M,d).getDay()];
+    const past = d < TODAY_D;
+    html += `<div class="rice-row${past?' past':''}">
+      <div class="rice-date">${TODAY_M+1}/${d}（${dow}）</div>
+      <div class="rice-info">
+        ${getBadge(info.type)}
+        <div class="rice-menu">${info.menu}</div>
+      </div>
+    </div>`;
+  }
+  document.getElementById('tab-ricelist').innerHTML =
+    `<div class="section-label">白ご飯を持参する日（${TODAY_M+1}月）</div>${html}`;
+}
+
+function switchTab(name, idx) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active',i===idx));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// init
+document.getElementById('header-month').textContent = `${TODAY_Y}年${TODAY_M+1}月 純心幼稚園`;
+renderToday();
+renderCalendar();
+renderRiceList();
+</script>
+</body>
+</html>
