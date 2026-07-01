@@ -10,68 +10,59 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #FEFCF7; --bg2: #F7F3EC; --bg3: #EDE8DF;
-    --text: #2C2416; --text2: #7A6E5F; --text3: #B0A694;
-    --amber: #C17A2A; --amber-bg: #FDF0DA; --amber-text: #7A4A0E;
-    --purple: #7B5EA7; --purple-bg: #F0EAF9; --purple-text: #4A2D7A;
-    --blue: #3A78C9; --blue-bg: #E8F1FC; --blue-text: #1A4A8C;
-    --gray-bg: #EDEBE7; --gray-text: #5C5448;
-    --border: rgba(44,36,22,0.1); --border2: rgba(44,36,22,0.18);
-    --radius: 14px; --radius-sm: 8px; --shadow: 0 2px 12px rgba(44,36,22,0.08);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { font-family: 'Zen Maru Gothic', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
-  .header { background: var(--bg); border-bottom: 1px solid var(--border); padding: 52px 20px 14px; position: sticky; top: 0; z-index: 100; }
-  .header-title { font-size: 17px; font-weight: 700; }
-  .header-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
-  .tabs-bar { display: flex; background: var(--bg2); border-radius: 12px; padding: 3px; margin: 12px 16px 0; }
-  .tab-btn { flex: 1; padding: 7px 0; border: none; background: transparent; border-radius: 10px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 12px; color: var(--text2); cursor: pointer; font-weight: 500; }
-  .tab-btn.active { background: var(--bg); color: var(--text); box-shadow: var(--shadow); font-weight: 700; }
-  .content { padding: 16px; }
-  .tab-pane { display: none; }
-  .tab-pane.active { display: block; }
-  .today-hero { background: linear-gradient(135deg, #FDF6E8 0%, #F7EDD4 100%); border: 1px solid rgba(193,122,42,0.2); border-radius: var(--radius); padding: 20px; margin-bottom: 14px; }
-  .today-eyebrow { font-size: 11px; color: var(--amber); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 4px; }
-  .today-date-txt { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
-  .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 5px 11px; border-radius: 20px; margin-bottom: 10px; }
-  .badge-rice { background: var(--amber-bg); color: var(--amber-text); }
-  .badge-noodle { background: var(--purple-bg); color: var(--purple-text); }
-  .badge-bread { background: var(--blue-bg); color: var(--blue-text); }
-  .badge-holiday { background: var(--gray-bg); color: var(--gray-text); }
-  .menu-name { font-size: 14px; line-height: 1.6; margin-top: 4px; }
-  .menu-note { font-size: 12px; color: var(--text2); margin-top: 6px; line-height: 1.5; }
-  .section-label { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 0.08em; margin: 18px 0 10px; }
-  .upcoming-row { display: flex; gap: 12px; align-items: flex-start; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 8px; box-shadow: var(--shadow); }
-  .upcoming-date { font-size: 13px; font-weight: 700; min-width: 68px; flex-shrink: 0; }
-  .upcoming-info { flex: 1; }
-  .upcoming-menu { font-size: 12px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
-  .cal-month { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
-  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
-  .cal-head { font-size: 10px; text-align: center; padding: 4px 0; color: var(--text3); font-weight: 700; }
-  .cal-cell { border-radius: 8px; padding: 4px 2px; min-height: 54px; display: flex; flex-direction: column; align-items: center; cursor: pointer; border: 1px solid transparent; }
-  .cal-cell:active { background: var(--bg3); }
-  .cal-cell.today { border: 2px solid var(--amber); }
-  .cal-cell.selected { background: var(--bg2); border-color: var(--border2); }
-  .cal-cell.empty { pointer-events: none; }
-  .cal-num { font-size: 12px; font-weight: 700; line-height: 1.4; }
-  .cal-dot { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px; margin-top: 2px; }
-  .cal-dot-rice { background: var(--amber-bg); color: var(--amber-text); }
-  .cal-dot-noodle { background: var(--purple-bg); color: var(--purple-text); }
-  .cal-dot-bread { background: var(--blue-bg); color: var(--blue-text); }
-  .cal-dot-holiday { background: var(--gray-bg); color: var(--gray-text); }
-  .cal-detail { background: var(--bg2); border-radius: var(--radius-sm); padding: 14px; margin-top: 12px; border: 1px solid var(--border); }
-  .cal-detail-date { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
-  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text2); }
-  .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
-  .rice-row { display: flex; align-items: flex-start; gap: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 8px; box-shadow: var(--shadow); }
-  .rice-row.past { opacity: 0.38; }
-  .rice-date { font-size: 13px; font-weight: 700; min-width: 72px; flex-shrink: 0; }
-  .rice-info { flex: 1; }
-  .rice-menu { font-size: 12px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
-  .note-box { background: var(--bg2); border-left: 3px solid var(--amber); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 12px 14px; font-size: 12px; color: var(--text2); line-height: 1.8; margin-top: 16px; }
-  .note-box strong { color: var(--text); display: block; margin-bottom: 4px; font-size: 12px; }
+  :root{--bg:#FEFCF7;--bg2:#F7F3EC;--bg3:#EDE8DF;--text:#2C2416;--text2:#7A6E5F;--text3:#B0A694;--amber:#C17A2A;--amber-bg:#FDF0DA;--amber-text:#7A4A0E;--purple:#7B5EA7;--purple-bg:#F0EAF9;--purple-text:#4A2D7A;--blue:#3A78C9;--blue-bg:#E8F1FC;--blue-text:#1A4A8C;--gray-bg:#EDEBE7;--gray-text:#5C5448;--border:rgba(44,36,22,0.1);--border2:rgba(44,36,22,0.18);--radius:14px;--radius-sm:8px;--shadow:0 2px 12px rgba(44,36,22,0.08);}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Zen Maru Gothic',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px;}
+  .header{background:var(--bg);border-bottom:1px solid var(--border);padding:52px 20px 14px;position:sticky;top:0;z-index:100;}
+  .header-title{font-size:17px;font-weight:700;}
+  .header-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+  .tabs-bar{display:flex;background:var(--bg2);border-radius:12px;padding:3px;margin:12px 16px 0;}
+  .tab-btn{flex:1;padding:7px 0;border:none;background:transparent;border-radius:10px;font-family:'Zen Maru Gothic',sans-serif;font-size:12px;color:var(--text2);cursor:pointer;font-weight:500;}
+  .tab-btn.active{background:var(--bg);color:var(--text);box-shadow:var(--shadow);font-weight:700;}
+  .content{padding:16px;}
+  .tab-pane{display:none;}
+  .tab-pane.active{display:block;}
+  .today-hero{background:linear-gradient(135deg,#FDF6E8 0%,#F7EDD4 100%);border:1px solid rgba(193,122,42,0.2);border-radius:var(--radius);padding:20px;margin-bottom:14px;}
+  .today-eyebrow{font-size:11px;color:var(--amber);font-weight:700;letter-spacing:0.05em;margin-bottom:4px;}
+  .today-date-txt{font-size:22px;font-weight:700;margin-bottom:12px;}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:5px 11px;border-radius:20px;margin-bottom:10px;}
+  .badge-rice{background:var(--amber-bg);color:var(--amber-text);}
+  .badge-noodle{background:var(--purple-bg);color:var(--purple-text);}
+  .badge-bread{background:var(--blue-bg);color:var(--blue-text);}
+  .badge-holiday{background:var(--gray-bg);color:var(--gray-text);}
+  .menu-name{font-size:14px;line-height:1.6;margin-top:4px;}
+  .menu-note{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.5;}
+  .section-label{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:0.08em;margin:18px 0 10px;}
+  .upcoming-row{display:flex;gap:12px;align-items:flex-start;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow);}
+  .upcoming-date{font-size:13px;font-weight:700;min-width:68px;flex-shrink:0;}
+  .upcoming-info{flex:1;}
+  .upcoming-menu{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.5;}
+  .cal-month{font-size:15px;font-weight:700;margin-bottom:10px;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+  .cal-head{font-size:10px;text-align:center;padding:4px 0;color:var(--text3);font-weight:700;}
+  .cal-cell{border-radius:8px;padding:4px 2px;min-height:54px;display:flex;flex-direction:column;align-items:center;cursor:pointer;border:1px solid transparent;}
+  .cal-cell:active{background:var(--bg3);}
+  .cal-cell.today{border:2px solid var(--amber);}
+  .cal-cell.selected{background:var(--bg2);border-color:var(--border2);}
+  .cal-cell.empty{pointer-events:none;}
+  .cal-num{font-size:12px;font-weight:700;line-height:1.4;}
+  .cal-dot{font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;margin-top:2px;}
+  .cal-dot-rice{background:var(--amber-bg);color:var(--amber-text);}
+  .cal-dot-noodle{background:var(--purple-bg);color:var(--purple-text);}
+  .cal-dot-bread{background:var(--blue-bg);color:var(--blue-text);}
+  .cal-dot-holiday{background:var(--gray-bg);color:var(--gray-text);}
+  .cal-detail{background:var(--bg2);border-radius:var(--radius-sm);padding:14px;margin-top:12px;border:1px solid var(--border);}
+  .cal-detail-date{font-size:14px;font-weight:700;margin-bottom:8px;}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);}
+  .legend-dot{width:10px;height:10px;border-radius:3px;}
+  .rice-row{display:flex;align-items:flex-start;gap:12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow);}
+  .rice-row.past{opacity:0.38;}
+  .rice-date{font-size:13px;font-weight:700;min-width:72px;flex-shrink:0;}
+  .rice-info{flex:1;}
+  .rice-menu{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.5;}
+  .note-box{background:var(--bg2);border-left:3px solid var(--amber);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 14px;font-size:12px;color:var(--text2);line-height:1.8;margin-top:16px;}
+  .note-box strong{color:var(--text);display:block;margin-bottom:4px;font-size:12px;}
 </style>
 </head>
 <body>
@@ -90,73 +81,73 @@
   <div class="tab-pane" id="tab-ricelist"></div>
 </div>
 <script>
-const WEEKDAYS = ['日','月','火','水','木','金','土'];
-const now = new Date();
-const TODAY_D = now.getDate();
-const TODAY_M = now.getMonth();
-const TODAY_Y = now.getFullYear();
+const WEEKDAYS=['日','月','火','水','木','金','土'];
+const now=new Date();
+const TODAY_D=now.getDate();
+const TODAY_M=now.getMonth();
+const TODAY_Y=now.getFullYear();
 
-// 6月データ
-// type: rice=白米持参 / noodle=麺(おにぎり持参) / bread=パン(不要) / holiday=休日
-const menuData = {
-  1:  {menu:'ひき肉の味噌井　豆腐のすまし汁　バナナ', type:'rice', note:'●丼の日。白ご飯を持たせてください'},
-  2:  {menu:'魚の甘酢あんかけ　鉄分サラダ　えのきのすまし汁（実習生献立）', type:'rice', note:'白ご飯を持たせてください'},
-  3:  {menu:'タンドリーチキン　ブロッコリーのしらす和え　コーンポタージュ', type:'rice', note:'白ご飯を持たせてください'},
-  4:  {menu:'白身魚フライ　かにかまサラダ　大根の味噌汁', type:'rice', note:'白ご飯を持たせてください'},
-  5:  {menu:'ミートカレーキッシュ　マカロニサラダ　コンソメスープ', type:'rice', note:'白ご飯を持たせてください'},
-  6:  {menu:'厚揚げの煮物　切り干し大根の和え物　なすの味噌汁', type:'holiday', note:'土曜日'},
-  7:  {menu:'日曜日', type:'holiday', note:''},
-  8:  {menu:'鮭のごま味噌焼き　きゅうりとわかめの酢の物　豆腐のすまし汁', type:'rice', note:'白ご飯を持たせてください'},
-  9:  {menu:'オーロラチキン　もやしのナムル　卵スープ', type:'rice', note:'白ご飯を持たせてください'},
-  10: {menu:'魚のカレータルタル焼き　フラワーサラダ　厚揚げの味噌汁', type:'rice', note:'白ご飯を持たせてください'},
-  11: {menu:'マーボー豆腐　れんこんサラダ　中華スープ', type:'rice', note:'白ご飯を持たせてください'},
-  12: {menu:'ナポリタン　野菜スープ　まるパン', type:'bread', note:'🥐パンの日。白ご飯は不要です'},
-  13: {menu:'午前保育のため、愛情弁当の日', type:'holiday', note:'土曜日・午前保育'},
-  14: {menu:'日曜日', type:'holiday', note:''},
-  15: {menu:'甘辛チキン　ひじきサラダ　コンソメスープ', type:'rice', note:'白ご飯を持たせてください'},
-  16: {menu:'ぶりのねぎ塩焼き　切り干し大根の煮物　ほうれん草のすまし汁', type:'rice', note:'白ご飯を持たせてください'},
-  17: {menu:'夏野菜チキンカレー　わかめスープ　フルーチェ', type:'rice', note:'●丼の日。白ご飯を持たせてください'},
-  18: {menu:'ひき肉入り卵焼き　スパゲティサラダ　コンソメスープ', type:'rice', note:'白ご飯を持たせてください'},
-  19: {menu:'魚のごまだれ焼き　春雨ソテー　豆腐の味噌汁', type:'rice', note:'白ご飯を持たせてください'},
-  20: {menu:'かき玉うどん　もやしのごま酢和え　オレンジ', type:'noodle', note:'▲麺の日。ご飯は少なめかおにぎりで持参'},
-  21: {menu:'土曜日', type:'holiday', note:''},
-  22: {menu:'スタミナそぼろ丼　ほうれん草の和え物　さつまいもの味噌汁', type:'rice', note:'●丼の日。白ご飯を持たせてください'},
-  23: {menu:'鮭のパン粉焼き　ポテトサラダ　ミネストローネ', type:'rice', note:'白ご飯を持たせてください'},
-  24: {menu:'鶏肉の味噌焼き　小松菜の煮浸し　えのきのすまし汁　フルーツミックス（Cクッキング）', type:'rice', note:'白ご飯を持たせてください'},
-  25: {menu:'れんこんハンバーグ　ほうれん草のソテー　大根の味噌汁', type:'rice', note:'白ご飯を持たせてください'},
-  26: {menu:'和風スパゲティ　野菜スープ　まるパン', type:'bread', note:'🥐パンの日。白ご飯は不要です'},
-  27: {menu:'中華丼　ツナ卵炒め　肉団子スープ', type:'rice', note:'●丼の日。白ご飯を持たせてください'},
-  28: {menu:'土曜日', type:'holiday', note:''},
-  29: {menu:'ぶりの照り焼き　春雨サラダ　かき玉汁', type:'rice', note:'白ご飯を持たせてください'},
-  30: {menu:'から揚げ　ごぼうサラダ　小松菜の味噌汁', type:'rice', note:'白ご飯を持たせてください'},
+// 7月献立データ（献立表から正確に読み取り）
+// type: rice=白米持参 / noodle=麺(おにぎり持参) / bread=パン(不要) / holiday=休日・行事
+const menuData={
+  1:  {menu:'鮭のコーンマヨ焼き　フラワーサラダ　えのきのすまし汁', type:'rice', note:'白ご飯を持たせてください'},
+  2:  {menu:'ひき肉入り卵焼き　ごぼうサラダ　油揚げの味噌汁', type:'rice', note:'白ご飯を持たせてください'},
+  3:  {menu:'夏野菜カレー　わかめスープ　フルーチェ', type:'rice', note:'●丼の日。白ご飯を持たせてください'},
+  4:  {menu:'冷しゃぶ　きんぴられんこん　もやしの味噌汁', type:'holiday', note:'土曜日'},
+  5:  {menu:'日曜日', type:'holiday', note:''},
+  6:  {menu:'野菜ラーメン　かにかまサラダ　オレンジ', type:'noodle', note:'▲麺の日。ご飯少なめかおにぎりで持参'},
+  7:  {menu:'油淋鶏　スパゲティサラダ　おくらそうめん汁', type:'rice', note:'白ご飯を持たせてください'},
+  8:  {menu:'豆腐ハンバーグ　ほうれん草のソテー　ミネストローネ　ココアバナナケーキ', type:'rice', note:'白ご飯を持たせてください'},
+  9:  {menu:'魚のごまだれ焼き　春雨ソテー　かぼちゃの味噌汁', type:'rice', note:'白ご飯を持たせてください'},
+  10: {menu:'和風きのこスパゲティ　野菜スープ　まるパン', type:'bread', note:'🥐パンの日。白ご飯は不要です'},
+  11: {menu:'回鍋肉　ちくわの和え物　中華スープ', type:'holiday', note:'土曜日'},
+  12: {menu:'日曜日', type:'holiday', note:''},
+  13: {menu:'そぼろ丼　きゅうりとわかめの酢の物　豆腐のすまし汁', type:'rice', note:'●丼の日。白ご飯を持たせてください'},
+  14: {menu:'ぶりのねぎ塩焼き　切り干し大根の煮物　なすの味噌汁', type:'rice', note:'白ご飯を持たせてください'},
+  15: {menu:'マーボー豆腐　れんこんサラダ　中華スープ', type:'rice', note:'白ご飯を持たせてください'},
+  16: {menu:'チキン南蛮　ブロッコリーのおかか和え　かぼちゃのポタージュ', type:'rice', note:'白ご飯を持たせてください'},
+  17: {menu:'A組スペシャルデーのため、愛情弁当の日', type:'holiday', note:'1号認定 夏休み開始・愛情弁当'},
+  18: {menu:'焼きそば　おからサラダ　ほうれん草のすまし汁', type:'noodle', note:'▲麺の日。ご飯少なめかおにぎりで持参'},
+  19: {menu:'土曜日', type:'holiday', note:''},
+  20: {menu:'海の日', type:'holiday', note:'祝日'},
+  21: {menu:'白身魚フライ　春雨サラダ　キャベツの味噌汁', type:'rice', note:'白ご飯を持たせてください'},
+  22: {menu:'お好み焼き　小松菜の煮浸し　冬瓜汁', type:'rice', note:'白ご飯を持たせてください'},
+  23: {menu:'午前保育のため、愛情弁当の日', type:'holiday', note:'午前保育・愛情弁当'},
+  24: {menu:'なすのミートスパゲティ　野菜スープ　まるパン', type:'bread', note:'🥐パンの日。白ご飯は不要です'},
+  25: {menu:'肉じゃが　トマトサラダ　豆腐の味噌汁', type:'holiday', note:'土曜日'},
+  26: {menu:'日曜日', type:'holiday', note:''},
+  27: {menu:'きのこ豚丼　ブロッコリーのしらす和え　わかめのすまし汁', type:'rice', note:'●丼の日。白ご飯を持たせてください'},
+  28: {menu:'冷やしサラダうどん　肉団子スープ　バナナ', type:'noodle', note:'▲麺の日。ご飯少なめかおにぎりで持参'},
+  29: {menu:'ぶりの照り焼き　切り干し大根の和え物　豚汁', type:'rice', note:'白ご飯を持たせてください'},
+  30: {menu:'ほうれん草のキッシュ　マカロニサラダ　コンソメスープ', type:'rice', note:'白ご飯を持たせてください'},
+  31: {menu:'から揚げ　ひじきサラダ　えのきの味噌汁', type:'rice', note:'白ご飯を持たせてください'},
 };
 
-function switchTab(name, idx) {
-  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active',i===idx));
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+function switchTab(name,idx){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
 }
-function getBadge(type) {
-  const map = { rice:['badge-rice','🍚 白ご飯を持参'], noodle:['badge-noodle','🍜 麺の日・おにぎり持参'], bread:['badge-bread','🥐 パンの日・不要'], holiday:['badge-holiday','休日・行事'] };
-  const [cls,txt] = map[type]||map.holiday;
+function getBadge(type){
+  const map={rice:['badge-rice','🍚 白ご飯を持参'],noodle:['badge-noodle','🍜 麺の日・おにぎり持参'],bread:['badge-bread','🥐 パンの日・不要'],holiday:['badge-holiday','休日・行事']};
+  const [cls,txt]=map[type]||map.holiday;
   return `<span class="badge ${cls}">${txt}</span>`;
 }
-function getDot(type) {
+function getDot(type){
   return `<span class="cal-dot cal-dot-${type}">${{rice:'白米',noodle:'麺',bread:'パン',holiday:'休'}[type]||'休'}</span>`;
 }
-
-function renderToday() {
-  const info = menuData[TODAY_D];
-  const dow = WEEKDAYS[now.getDay()];
-  let html = `<div class="today-hero">
+function renderToday(){
+  const info=menuData[TODAY_D];
+  const dow=WEEKDAYS[now.getDay()];
+  let html=`<div class="today-hero">
     <div class="today-eyebrow">Today</div>
     <div class="today-date-txt">${TODAY_M+1}月${TODAY_D}日（${dow}）</div>
     ${getBadge(info?info.type:'holiday')}
     <div class="menu-name">${info?info.menu:'給食なし・休日'}</div>
     ${info&&info.note?`<div class="menu-note">${info.note}</div>`:''}
   </div>`;
-  const upcoming = [];
-  for (let d=TODAY_D+1;d<=30;d++) {
+  const upcoming=[];
+  for(let d=TODAY_D+1;d<=31;d++){
     const m=menuData[d];
     if(m&&m.type!=='holiday'){upcoming.push({d,...m});}
     if(upcoming.length>=4)break;
@@ -170,7 +161,6 @@ function renderToday() {
   }
   document.getElementById('tab-today').innerHTML=html;
 }
-
 let selectedDay=null;
 function renderCalendar(){
   const firstDow=new Date(TODAY_Y,TODAY_M,1).getDay();
@@ -180,7 +170,7 @@ function renderCalendar(){
     grid+=`<div class="cal-head" style="${c}">${w}</div>`;
   });
   for(let i=0;i<firstDow;i++)grid+='<div class="cal-cell empty"></div>';
-  for(let d=1;d<=30;d++){
+  for(let d=1;d<=31;d++){
     const info=menuData[d];
     const isToday=d===TODAY_D,isSel=d===selectedDay;
     const dow=new Date(TODAY_Y,TODAY_M,d).getDay();
@@ -209,15 +199,15 @@ function renderCalendar(){
       <strong>持参ルール（純心幼稚園 令和8年度）</strong>
       🍚 白ご飯は毎日持たせてください（パンの日除く）<br>
       🍜 麺の日（▲）はご飯少なめかおにぎりで持参<br>
-      🥐 パンの日（12・26日）は不要<br>
-      ●丼の日も白ご飯を持参
+      🥐 パンの日（10・24日）は不要<br>
+      ●丼の日も白ご飯を持参<br>
+      17日〜夏休み（1号認定）
     </div>`;
 }
 function selectDay(d){selectedDay=selectedDay===d?null:d;renderCalendar();}
-
 function renderRiceList(){
   let html='';
-  for(let d=1;d<=30;d++){
+  for(let d=1;d<=31;d++){
     const info=menuData[d];
     if(!info||info.type==='holiday'||info.type==='bread')continue;
     const dow=WEEKDAYS[new Date(TODAY_Y,TODAY_M,d).getDay()];
@@ -226,7 +216,6 @@ function renderRiceList(){
   }
   document.getElementById('tab-ricelist').innerHTML=`<div class="section-label">白ご飯を持参する日（${TODAY_M+1}月）</div>${html}`;
 }
-
 document.getElementById('header-sub').textContent=`${TODAY_Y}年${TODAY_M+1}月 純心幼稚園`;
 renderToday();renderCalendar();renderRiceList();
 </script>
